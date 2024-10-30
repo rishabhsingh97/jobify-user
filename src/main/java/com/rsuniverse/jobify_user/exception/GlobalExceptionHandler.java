@@ -3,6 +3,7 @@ package com.rsuniverse.jobify_user.exception;
 import com.rsuniverse.jobify_user.exception.customExceptions.AuthException;
 import com.rsuniverse.jobify_user.exception.customExceptions.JobSeekerException;
 import com.rsuniverse.jobify_user.exception.customExceptions.UserException;
+import io.github.resilience4j.ratelimiter.RequestNotPermitted;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -43,7 +44,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<BaseRes<String>> handleInternalServerError(Exception e) {
         log.error("Internal server error: ", e);
-        return BaseRes.error("An unexpected error occurred.", 101, HttpStatus.INTERNAL_SERVER_ERROR);
+        return BaseRes.error("An unexpected error occurred: " + e.getMessage(), 101, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(RequestNotPermitted.class)
+    public ResponseEntity<BaseRes<String>> handleRateLimitException(RequestNotPermitted e) {
+        log.error("Resilience 4j error: ", e);
+        return BaseRes.error("Resilience 4j error: " + e.getMessage(), 104, HttpStatus.TOO_MANY_REQUESTS);
     }
 
     // Custom Exceptions

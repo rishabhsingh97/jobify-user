@@ -1,5 +1,6 @@
 package com.rsuniverse.jobify_user.controllers;
 
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,6 +36,7 @@ public class JobSeekerController {
      * @param size - pagination with fixed page size, defaults to 10
      * @return Paginated list of JobSeekers
      */
+    @RateLimiter(name = "defaultRateLimiter")
     @GetMapping("")
     public ResponseEntity<BaseRes<PaginatedRes<JobSeekerDTO>>> getAllJobSeekers(@RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
@@ -43,6 +45,7 @@ public class JobSeekerController {
             return BaseRes.<PaginatedRes<JobSeekerDTO>>success(paginatedRes);
     }
 
+    @RateLimiter(name = "defaultRateLimiter")
     @GetMapping("/{id}")
     public ResponseEntity<BaseRes<JobSeekerDTO>> getJobSeekerById(@PathVariable String id) {
         log.info("Incoming request to get jobSeeker with id: {}", id);
@@ -50,6 +53,7 @@ public class JobSeekerController {
             return BaseRes.success(jobSeekerDTO);
     }
 
+    @RateLimiter(name = "defaultRateLimiter")
     @PostMapping("")
     public ResponseEntity<BaseRes<JobSeekerDTO>> createJobSeeker(@RequestBody @Valid JobSeekerDTO jobSeekerDTO) {
         log.info("Incoming request to create jobSeeker: {}", jobSeekerDTO);
@@ -57,6 +61,7 @@ public class JobSeekerController {
             return BaseRes.success(createdJobSeeker);
     }
 
+    @RateLimiter(name = "defaultRateLimiter")
     @PutMapping("/{id}")
     public ResponseEntity<BaseRes<JobSeekerDTO>> updateJobSeeker(@PathVariable String id, @RequestBody @Valid JobSeekerDTO jobSeekerDTO) {
         log.info("Incoming request to update jobSeeker with id: {}, jobSeeker: {}", id, jobSeekerDTO);
@@ -64,6 +69,7 @@ public class JobSeekerController {
             return BaseRes.success(updatedJobSeeker);
     }
 
+    @RateLimiter(name = "defaultRateLimiter")
     @DeleteMapping("/{id}")
     public ResponseEntity<BaseRes<Void>> deleteJobSeeker(@PathVariable String id) {
         log.info("Incoming request to delete jobSeeker with id: {}", id);

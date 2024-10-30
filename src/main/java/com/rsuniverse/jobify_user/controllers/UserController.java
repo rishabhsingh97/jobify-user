@@ -1,6 +1,7 @@
 package com.rsuniverse.jobify_user.controllers;
 
 import com.rsuniverse.jobify_user.models.enums.KafkaTopic;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -36,6 +37,7 @@ public class UserController {
     private final UserService userService;
     private final KafkaProducerService kafkaProducerService;
 
+    @RateLimiter(name = "defaultRateLimiter")
     @GetMapping("")
     public ResponseEntity<BaseRes<PaginatedRes<UserDTO>>> getAllUsers(@RequestParam(defaultValue = "1") int page,
                                                                       @RequestParam(defaultValue = "10") int size) {
@@ -44,6 +46,7 @@ public class UserController {
         return BaseRes.success(paginatedRes);
     }
 
+    @RateLimiter(name = "defaultRateLimiter")
     @GetMapping("/auth-user")
     public ResponseEntity<BaseRes<UserDTO>> getAuthenticatedUser(HttpServletRequest request, Authentication authentication) {
         log.info("Incoming request to get authenticated user: {}", authentication.getPrincipal());
@@ -52,6 +55,7 @@ public class UserController {
         return BaseRes.success(userDTO);
     }
 
+    @RateLimiter(name = "defaultRateLimiter")
     @GetMapping("/{id}")
     public ResponseEntity<BaseRes<UserDTO>> getUserById(@PathVariable String id) {
         log.info("Incoming request to get user with id: {}", id);
@@ -59,6 +63,7 @@ public class UserController {
         return BaseRes.success(userDTO);
     }
 
+    @RateLimiter(name = "defaultRateLimiter")
     @PostMapping("")
     public ResponseEntity<BaseRes<UserDTO>> createUser(@RequestBody @Valid UserDTO userDTO) {
         log.info("Incoming request to create user: {}", userDTO);
@@ -71,6 +76,7 @@ public class UserController {
         return BaseRes.success(createdUser);
     }
 
+    @RateLimiter(name = "defaultRateLimiter")
     @PutMapping("/{id}")
     public ResponseEntity<BaseRes<UserDTO>> updateUser(@PathVariable String id, @RequestBody @Valid UserDTO userDTO) {
         log.info("Incoming request to update user with id: {}, user: {}", id, userDTO);
@@ -83,6 +89,7 @@ public class UserController {
         return BaseRes.success(updatedUser);
     }
 
+    @RateLimiter(name = "defaultRateLimiter")
     @DeleteMapping("/{id}")
     public ResponseEntity<BaseRes<Void>> deleteUser(@PathVariable String id) {
         log.info("Incoming request to delete user with id: {}", id);
