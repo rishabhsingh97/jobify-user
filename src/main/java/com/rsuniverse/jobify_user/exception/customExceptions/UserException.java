@@ -6,15 +6,19 @@ import lombok.Getter;
 
 @Getter
 public class UserException extends CustomException {
-    private ErrorCode errorCode;
-    private String message;
+    private final ErrorCode errorCode;
+    private final String message;
 
     public UserException(ErrorCode errorCode, String message) {
         super(errorCode, message);
+        this.errorCode = errorCode;
+        this.message = message;
     }
 
     public UserException(ErrorCode errorCode) {
         super(errorCode);
+        this.errorCode = errorCode;
+        this.message = errorCode.getMessage();
     }
 
 }

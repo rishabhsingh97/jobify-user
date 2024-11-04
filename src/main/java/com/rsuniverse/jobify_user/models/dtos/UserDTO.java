@@ -34,7 +34,6 @@ public class UserDTO implements Serializable {
     private String createdBy; 
     private String updatedBy; 
 
-    @NotNull(message = "Roles cannot be null")
     private Set<UserRole> roles;
 
     private UserStatus status;

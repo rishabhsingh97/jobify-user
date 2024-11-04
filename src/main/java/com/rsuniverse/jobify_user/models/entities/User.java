@@ -1,40 +1,39 @@
 package com.rsuniverse.jobify_user.models.entities;
 
-import com.mongodb.lang.NonNull;
-import com.rsuniverse.jobify_user.models.enums.UserRole;
 import com.rsuniverse.jobify_user.models.enums.UserStatus;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 @Data
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@Document("users")
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public class User {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+
     private String fullName;
-
-    @NonNull
-    @Indexed(unique = true)
     private String email;
-
     private String password;
-
     private String createdBy;
     private String updatedBy;
     private LocalDateTime lastLogin;
-    private Set<UserRole> roles;
+
+    @OneToMany
+    private List<UserRole> roles;
+
     private UserStatus status;
 
 }
+

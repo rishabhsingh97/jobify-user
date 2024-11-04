@@ -44,13 +44,6 @@ public class AuthController {
     public ResponseEntity<BaseRes<UserDTO>> register(@RequestBody @Valid UserDTO userDTO) {
         log.info("Registering new user with details: {}", userDTO);
 
-        Set<UserRole> supportedRoles = Set.of(UserRole.JOB_SEEKER, UserRole.RECRUITER);
-        Set<UserRole> userRoles = userDTO.getRoles();
-
-        if (userRoles.stream().noneMatch(supportedRoles::contains)) {
-            return BaseRes.error("User roles not supported", 24, HttpStatus.FORBIDDEN);
-        }
-
         UserDTO registeredUser = userService.createUser(userDTO);
         kafkaProducerService.sendMessage(KafkaTopic.USER_REGISTERED.getName(), KafkaEvent.builder()
                 .status("success")

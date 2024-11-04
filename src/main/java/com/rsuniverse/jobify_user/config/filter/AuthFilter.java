@@ -26,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AuthFilter extends OncePerRequestFilter {
 
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -41,6 +42,8 @@ public class AuthFilter extends OncePerRequestFilter {
 
     private AuthUser extractHeaders(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+
+  //   TODO  Bypass for these request .requestMatchers("/auth/**").permitAll()
         final List<String> headers = List.of(
                 "id",
                 "fullname",

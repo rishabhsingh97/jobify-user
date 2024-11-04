@@ -14,7 +14,7 @@ public enum ErrorCode {
     AUTH_TOKEN_NOT_REFRESHED(204, "invalid password", HttpStatus.UNAUTHORIZED),
 
     USER_NOT_FOUND(301,"user not found", HttpStatus.NOT_FOUND),
-    USER_ALREADY_EXISTS(302,"user already exists", HttpStatus.CONFLICT),;
+    USER_ALREADY_EXISTS(302,"user already exists", HttpStatus.CONFLICT);
 
     private final int code;
     private final String message;

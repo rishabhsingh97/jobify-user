@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class JobSeekerDTO implements Serializable {
+public class CandidateDTO implements Serializable {
 
     private String id;
     private String userId;

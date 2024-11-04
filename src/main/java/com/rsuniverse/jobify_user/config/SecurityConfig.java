@@ -13,6 +13,8 @@ import com.rsuniverse.jobify_user.config.filter.AuthFilter;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -21,11 +23,16 @@ public class SecurityConfig {
     private final AuthFilter authFilter;
 
     @Bean
+    public List<String> whitelistedPaths() {
+        return List.of("/auth/**");
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((requests) -> requests
-                    .requestMatchers("/auth/**").permitAll()
+                    .requestMatchers(whitelistedPaths().toArray(new String[0])).permitAll()
                     .anyRequest().authenticated()
                 )
                 .formLogin(AbstractHttpConfigurer::disable)
