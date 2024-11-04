@@ -42,7 +42,7 @@ public class JwtUtils {
     private static Map<String,Object> makePayload(AuthUser user) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", user.getId());
-        claims.put("fullname", user.getFullName());
+        claims.put("fullName", user.getFullName());
         claims.put("email", user.getEmail());
         claims.put("status", user.getStatus());
         claims.put("roles", user.getRoles());
@@ -58,7 +58,7 @@ public class JwtUtils {
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(now.plusSeconds(expiration)))
                 .and()
-                .signWith(getKey())
+                .signWith(getKey(), Jwts.SIG.HS256)
                 .compact();
     }
 
@@ -103,15 +103,15 @@ public class JwtUtils {
 
     public static AuthUser extractUser(String token) {
         String id = extractClaim(token, claims -> (String) claims.get("id"));
-        String name = extractClaim(token, claims -> (String) claims.get("name"));
+        String fullName = extractClaim(token, claims -> (String) claims.get("fullName"));
         String email = extractClaim(token, claims -> (String) claims.get("email"));
         String status = extractClaim(token, claims -> (String) claims.get("status"));
         Set<UserRole> roles = extractRoles(token);
 
         AuthUser user = new AuthUser();
 
-        String[] nameParts = name.split(" ");
         user.setId(id);
+        user.setFullName(fullName);
         user.setEmail(email);
         user.setStatus(UserStatus.valueOf(status));
         user.setRoles(roles);

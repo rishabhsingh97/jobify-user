@@ -5,6 +5,7 @@ import com.rsuniverse.jobify_user.models.dtos.RefreshDTO;
 import com.rsuniverse.jobify_user.models.dtos.UserDTO;
 import com.rsuniverse.jobify_user.models.enums.KafkaTopic;
 import com.rsuniverse.jobify_user.models.enums.UserRole;
+import com.rsuniverse.jobify_user.models.pojos.AuthUser;
 import com.rsuniverse.jobify_user.models.pojos.KafkaEvent;
 import com.rsuniverse.jobify_user.models.responses.BaseRes;
 import com.rsuniverse.jobify_user.services.AuthService;
@@ -17,10 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
@@ -75,6 +73,15 @@ public class AuthController {
         log.info("User login attempt with username: {}", loginDTO.getUsername());
         LoginDTO authenticatedUser = authService.login(loginDTO, authenticationManager);
         log.info("User logged in successfully: {}", authenticatedUser.toString());
+        return BaseRes.success(authenticatedUser);
+    }
+
+    @RateLimiter(name = "defaultRateLimiter")
+    @GetMapping("/info/{token}")
+    public ResponseEntity<BaseRes<AuthUser>> login(@PathVariable String token) {
+        log.info("Get auth info attempt with token: {}", token);
+        AuthUser authenticatedUser = authService.getAuthInfo(token);
+        log.info("Auth user fetched successfully: {}", authenticatedUser.toString());
         return BaseRes.success(authenticatedUser);
     }
 

@@ -6,6 +6,7 @@ import com.rsuniverse.jobify_user.models.dtos.LoginDTO;
 import com.rsuniverse.jobify_user.models.dtos.RefreshDTO;
 import com.rsuniverse.jobify_user.models.enums.ErrorCode;
 import com.rsuniverse.jobify_user.utils.JwtUtils;
+import io.jsonwebtoken.Claims;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -80,5 +81,15 @@ public class AuthService implements UserDetailsService {
         else {
             throw new AuthException(ErrorCode.AUTH_INVALID_USERNAME,"token not refreshed");
         }
+    }
+
+    public AuthUser getAuthInfo(String token) {
+        try {
+            return JwtUtils.extractUser(token);
+        } catch (Exception e) {
+            log.error("Error while extracting auth info: {}", e.getMessage());
+            throw new AuthException(ErrorCode.AUTH_TOKEN_NOT_REFRESHED);
+        }
+
     }
 }
